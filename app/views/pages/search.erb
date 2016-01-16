@@ -1,0 +1,77 @@
+<h2>Search </h2>
+<form id="searchForm" name="searchForm">
+  <input type="text" name="term" placeholder="search for anything"/><br />
+
+  <input type="submit" class="btn btn-success">
+</form>
+
+<div id="searchResult" class="">
+  <h3>Results...</h3>
+  <span id="classInfo" class="col-md-2"></span>
+</div>
+<div id="noResult" class="">
+  <h4>Nothing matches your search.  Check our some of our trending courses.....</h4><br /><br />
+</div>
+<script>
+  $(document).ready(function () {
+    $("#searchResult").hide();
+    $("#noResult").hide();
+    $('#searchForm').submit(function(event) {
+      $("#classInfo").html("");
+      $('#noResult').hide();
+      $('#searchResult').hide();
+      var term = $('input[name=term]').val()
+      var formData = {"query": {"query_string": {"query": term}}};
+      var newData = JSON.stringify(formData)
+
+      $.ajax({
+            type        : 'POST',
+            crossDomain : true,
+            url         : 'https://search.nuvolaacademy.com/_search',
+            data        : newData,
+            dataType    : 'json',
+            encode      : true,
+          })
+
+          /////ugh...this is shit.  need to refactor......
+          .done(function(data) {
+            $.each(data, function(i, value) {
+              if (value === parseInt(value, 10)){
+
+              } else {
+                if (value != false) {
+                  $.each(value, function(t, dat) {
+                    if (t == "hits") {
+                      $.each(dat, function(x, fin) {
+                        $.each(fin, function(t, final) {
+                          if (t == "_source"){
+                            console.log(final);
+                            if (final.title) {
+                              $('#searchResult').show();
+                              $('#noResult').hide();
+                            } else {
+                              $('#noResult').show();
+                            }
+                            $('#classInfo').append("<p> <img src='" + final.pic + "'/> <b>Title</b> " + final.title +
+                                "<br /> <b>Description </b> " + final.description + "<br /> <a class='clickable' onclick='return false;' href='" + final.link + "'>" + final.link + "</a></p>"
+                            );
+                          }
+                        })
+                      });
+                      $('.clickable').click(function(){
+                        $('#frame')[0].src = this.href
+                      })
+                    } else {
+                      $('#noResult').show();
+                    }
+                  });
+                }
+              }
+            });
+
+          });
+      event.preventDefault();
+    })
+  })
+
+</script>
