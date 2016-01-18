@@ -1,9 +1,13 @@
 source 'https://rubygems.org'
 
-
+#gem 'mina'
+#gem 'mina-sidekiq', :require => false
+#gem 'mina-unicorn', :require => false
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
+gem 'dotenv-rails', :require => 'dotenv/rails-now'
 gem 'rails', '4.2.5'
 gem 'jquery-rails'
+gem 'unicorn'
 # Use postgresql as the database for Active Record
 gem 'pg', '~> 0.15'
 # Use SCSS for stylesheets

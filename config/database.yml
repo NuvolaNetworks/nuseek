@@ -88,5 +88,5 @@ test:
 production:
   <<: *default
   database: nuseek_production
-  username: nuseek
+  username: <%= ENV['NUSEEK_DATABASE_USER'] %>
   password: <%= ENV['NUSEEK_DATABASE_PASSWORD'] %>
